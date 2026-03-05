@@ -2,6 +2,15 @@ import requests
 from random import choice
 from time import sleep
 
+# Список всех монет
+COINS_LIST = requests.get("https://api.coingecko.com/api/v3/coins/list").json()
+# Делаем задержку между запросами(хотя она тут не особо поможет :))
+sleep(1)
+# Список котируемых валют
+COUNTER_CURRENCIES = requests.get(
+    "https://api.coingecko.com/api/v3/simple/supported_vs_currencies"
+).json()
+
 
 def get_actual_price(coin=None, currency="usd"):
     if coin is None:
@@ -25,15 +34,6 @@ def get_actual_price(coin=None, currency="usd"):
 
         return "Server Error. Please wait or check if your request is right"
 
-
-# Список всех монет
-COINS_LIST = requests.get("https://api.coingecko.com/api/v3/coins/list").json()
-# Делаем задержку между запросами(хотя она тут не особо поможет :))
-sleep(1)
-# Список котируемых валют
-COUNTER_CURRENCIES = requests.get(
-    "https://api.coingecko.com/api/v3/simple/supported_vs_currencies"
-).json()
 
 print(get_actual_price(choice(COINS_LIST), choice(COUNTER_CURRENCIES)))
 sleep(1)
