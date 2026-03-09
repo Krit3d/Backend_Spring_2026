@@ -7,10 +7,15 @@ CSV_FILENAME = "hacker_news.csv"
 
 
 def fetch_html(url):
+    responses = []
+
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        return response.text
+        for i in range(5):
+            response = requests.get(f"{url}?={i + 1}")
+            response.raise_for_status()
+            responses.append(response.text)
+
+        return "".join(responses)
 
     except requests.exceptions.HTTPError as http_err:
         print(f"Server Error: {type(http_err).__name__}")
