@@ -12,18 +12,28 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
-# Слушатель событий
+# Хэндлер для команды /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer(
-        "Привет! Я эхо-бот. Отправь мне любое сообщение, и я его повторю."
+        "Приветствую, сударь. Я к вашим услугам. Чем могу быть полезен?"
+    )
+
+
+# Хэндлер для команды /help
+@dp.message(Command("help"))
+async def cmd_start(message: types.Message):
+    await message.answer(
+        "Я простой эхо-бот. Просто отправь мне личное сообщение, и я тебе его верну"
     )
 
 
 # Хэндлер для остальных сообщений
 @dp.message()
 async def echo_handler(message: types.Message):
-    await message.answer(f"Я получил твоё сообщение: {message.text}")
+    await message.answer(
+        f"Я не был запрограммирован на юмор, сударь. Я лишь повторяю ваши фразы: {message.text}"
+    )
 
 
 # Запуск процесса поллинга новых апдейтов
