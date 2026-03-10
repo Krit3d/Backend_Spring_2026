@@ -1,9 +1,8 @@
 import asyncio
 import logging
 import requests
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters.command import Command
-from aiogram import F
 from config import BOT_TOKEN
 from random import choice
 
@@ -52,9 +51,7 @@ async def cmd_crypto(message: types.Message, coins: list, currencies: list):
 
     # Если raise_for_status() сработал
     except requests.exceptions.HTTPError as http_err:
-        await message.answer(
-            f"Server error: {type(http_err).__name__}."
-        )
+        await message.answer(f"Server error: {type(http_err).__name__}.")
 
     # Если ошибка на стороне клиента(к примеру, интернет отвалился)
     except requests.exceptions.RequestException as req_err:
@@ -69,6 +66,12 @@ async def cmd_crypto(message: types.Message, coins: list, currencies: list):
         await message.answer(
             f"The current value of 1 {coin['name']} is {data.get(coin['id'], {}).get(currency, 'No data')} {currency.upper()}."
         )
+
+
+# Хэндлер для фото
+@dp.message(F.photo)
+async def photo_handler(message: types.Message):
+    await message.answer("It's a photo, isn't it? Please, send me a text.")
 
 
 # Хэндлер для остальных сообщений
