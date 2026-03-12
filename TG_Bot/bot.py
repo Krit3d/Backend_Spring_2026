@@ -4,6 +4,7 @@ import requests
 from aiogram import Bot, Dispatcher
 from handlers import basic_handlers, crypto_handler
 from config import BOT_TOKEN
+from database import db_start, cmd_insert, get_all_users
 
 # Список всех монет
 COINS_LIST = requests.get("https://api.coingecko.com/api/v3/coins/list").json()
@@ -22,13 +23,22 @@ dp = Dispatcher()
 
 # Запуск процесса поллинга новых апдейтов
 async def main():
+    # Создание таблицы с данными
+    db_start()
+
     # Регистрируем роутеры в диспетчере
     dp.include_router(crypto_handler.router)
     dp.include_router(basic_handlers.router)
 
     # Удаляем вебхук и пропускаем накопившиеся входящие сообщения
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot, coins=COINS_LIST, currencies=COUNTER_CURRENCIES)
+    await dp.start_polling(
+        bot,
+        coins=COINS_LIST,
+        currencies=COUNTER_CURRENCIES,
+        insert_func=cmd_insert,
+        show_users=get_all_users,
+    )
 
 
 # Точка входа в программу
