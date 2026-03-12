@@ -1,17 +1,17 @@
 from aiogram import F, types, Router
 from aiogram.filters.command import Command
-from typing import Callable
+from database import cmd_insert, get_all_users
 
 router = Router()
 
 
 # Хэндлер для команды /start
 @router.message(Command("start"))
-async def cmd_start(message: types.Message, insert_func: Callable):
+async def cmd_start(message: types.Message):
     await message.answer(
         f"Hello, {message.from_user.full_name}. I'm at your service. What can I do for you?"
     )
-    insert_func(message.from_user.id, message.from_user.full_name)
+    cmd_insert(message.from_user.id, message.from_user.full_name)
 
 
 # Хэндлер для команды /help
@@ -23,12 +23,16 @@ async def cmd_help(message: types.Message):
 
 
 @router.message(Command("admin"))
-async def cmd_admin(message: types.Message, show_users: Callable):
-    users = show_users()
+async def cmd_admin(message: types.Message):
+    users = get_all_users()
 
     if users:
+        txt = "List of users:\n"
+
         for user in users:
-            await message.answer(f"ID: {user[0]} | Имя: {user[1]}")
+            txt += f"ID: {user[0]} | Имя: {user[1]}\n"
+
+        await message.answer(txt)
 
 
 # Хэндлер для фото

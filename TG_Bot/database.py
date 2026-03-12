@@ -13,21 +13,16 @@ def db_start():
 
 
 def cmd_insert(user_id, full_name):
-    data = (user_id, full_name)
+    with sqlite3.connect("users.db") as con:
+        cur = con.cursor()
 
-    con = sqlite3.connect("users.db")
-    cur = con.cursor()
-
-    try:
-        cur.execute(
-            "INSERT OR IGNORE INTO users (user_id, full_name) VALUES (?, ?)",
-            data,
-        )
-    except sqlite3.Error as e:
-        print(f"An error occured: {type(e).__name__}.")
-    finally:
-        con.commit()
-        con.close()
+        try:
+            cur.execute(
+                "INSERT OR IGNORE INTO users (user_id, full_name) VALUES (?, ?)",
+                (user_id, full_name),
+            )
+        except sqlite3.Error as e:
+            print(f"DB Error: {type(e).__name__}.")
 
 
 def get_all_users():

@@ -4,7 +4,7 @@ import requests
 from aiogram import Bot, Dispatcher
 from handlers import basic_handlers, crypto_handler
 from config import BOT_TOKEN
-from database import db_start, cmd_insert, get_all_users
+from database import db_start
 
 # Список всех монет
 COINS_LIST = requests.get("https://api.coingecko.com/api/v3/coins/list").json()
@@ -36,8 +36,6 @@ async def main():
         bot,
         coins=COINS_LIST,
         currencies=COUNTER_CURRENCIES,
-        insert_func=cmd_insert,
-        show_users=get_all_users,
     )
 
 
