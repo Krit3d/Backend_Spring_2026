@@ -1,6 +1,7 @@
 import sqlite3
 
 
+# Создаём таблицу для зарегистрированных пользователей
 def db_start():
     with sqlite3.connect("users.db") as con:
         cur = con.cursor()
@@ -15,6 +16,7 @@ def db_start():
         )
 
 
+# Записываем каждого юзера в users на команду /start
 def cmd_insert(user_id, full_name):
     with sqlite3.connect("users.db") as con:
         cur = con.cursor()
@@ -28,6 +30,7 @@ def cmd_insert(user_id, full_name):
             print(f"DB Error: {type(e).__name__}.")
 
 
+# Показываем список из данных о каждом пользователе(в виде кортежа)
 def get_all_users():
     with sqlite3.connect("users.db") as con:
         cur = con.cursor()
@@ -38,6 +41,7 @@ def get_all_users():
     return users
 
 
+# Создаём таблицу с запросами пользователей
 def create_requests_log():
     with sqlite3.connect("users.db") as con:
         cur = con.cursor()
@@ -53,6 +57,7 @@ def create_requests_log():
         )
 
 
+# Записываем в лог каждый запрос пользователей
 def write_into_log(user_id, coin):
     with sqlite3.connect("users.db") as con:
         cur = con.cursor()
