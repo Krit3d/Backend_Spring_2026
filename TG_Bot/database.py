@@ -2,14 +2,17 @@ import sqlite3
 
 
 def db_start():
-    con = sqlite3.connect("users.db")
-    cur = con.cursor()
-
-    cur.execute(
-        "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, user_id INTEGER UNIQUE, full_name TEXT)"
-    )
-
-    con.close()
+    with sqlite3.connect("users.db") as con:
+        cur = con.cursor()
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS users(
+                id INTEGER PRIMARY KEY, 
+                user_id INTEGER UNIQUE, 
+                full_name TEXT
+            )
+        """
+        )
 
 
 def cmd_insert(user_id, full_name):
@@ -26,13 +29,11 @@ def cmd_insert(user_id, full_name):
 
 
 def get_all_users():
-    con = sqlite3.connect("users.db")
-    cur = con.cursor()
+    with sqlite3.connect("users.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT user_id, full_name FROM users")
 
-    cur.execute("SELECT user_id, full_name FROM users")
-    users = cur.fetchall()
-
-    con.close()
+        users = cur.fetchall()
 
     return users
 
