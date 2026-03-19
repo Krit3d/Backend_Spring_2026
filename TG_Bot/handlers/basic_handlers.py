@@ -37,9 +37,10 @@ async def cmd_admin(message: types.Message):
         await message.answer(txt)
 
 
-# Выводит статистику запросов пользователя
+# Выводит статистику запросов пользователей
 @router.message(Command("stats"))
 async def cmd_stats(message: types.Message):
+    # Благодаря этой проверке команда /stats доступна только админу
     if message.from_user.id != ADMIN_ID:
         await message.answer("Access denied")
         return
@@ -47,12 +48,10 @@ async def cmd_stats(message: types.Message):
     statistics = get_statistics()
 
     if statistics:
-        coin_stats = []
-
-        for name, coin, counter in statistics:
-            coin_stats.append(
-                f"User {name} searched {coin} price for {counter} times."
-            )
+        coin_stats = [
+            f"User {name} searched {coin} price for {counter} times."
+            for name, coin, counter in statistics
+        ]
 
         await message.answer("\n".join(coin_stats))
     else:
