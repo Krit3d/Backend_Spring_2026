@@ -1,6 +1,6 @@
 from aiogram import F, types, Router
 from aiogram.filters.command import Command
-from database import cmd_insert, get_all_users
+from database import cmd_insert, get_all_users, get_statistics
 
 router = Router()
 
@@ -22,6 +22,7 @@ async def cmd_help(message: types.Message):
     )
 
 
+# Команда /admin показывает список всех пользователей
 @router.message(Command("admin"))
 async def cmd_admin(message: types.Message):
     users = get_all_users()
@@ -33,6 +34,24 @@ async def cmd_admin(message: types.Message):
             txt += f"ID: {user[0]} | Имя: {user[1]}\n"
 
         await message.answer(txt)
+
+
+# Выводит статистику запросов пользователя
+@router.message(Command("stats"))
+async def cmd_stats(message: types.Message):
+    statistics = get_statistics()
+
+    if statistics:
+        coin_stats = []
+
+        for name, coin, counter in statistics:
+            coin_stats.append(
+                f"User {name} searched {coin} price for {counter} times."
+            )
+
+        await message.answer("\n".join(coin_stats))
+    else:
+        await message.answer("No statistics yet or the query is wrong.")
 
 
 # Хэндлер для фото

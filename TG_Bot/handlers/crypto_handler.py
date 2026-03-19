@@ -14,6 +14,9 @@ router = Router()
 async def cmd_crypto(message: types.Message, coins: list, currencies: list):
     coin = choice(coins)
     currency = choice(currencies)
+    # # Test: point requests
+    # coin = coins[0]
+    # currency = currencies[0]
 
     url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin['id']}&vs_currencies={currency}"
 
@@ -23,7 +26,10 @@ async def cmd_crypto(message: types.Message, coins: list, currencies: list):
 
     # Если raise_for_status() сработал
     except requests.exceptions.HTTPError as http_err:
-        await message.answer(f"Server error: {type(http_err).__name__}.")
+        if response.status_code == 429:
+            await message.answer("Too many requests.")
+        else:
+            await message.answer(f"Server error: {type(http_err).__name__}.")
 
     # Если ошибка на стороне клиента(к примеру, интернет отвалился)
     except requests.exceptions.RequestException as req_err:
