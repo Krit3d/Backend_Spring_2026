@@ -19,7 +19,7 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
-async def main():
+async def main() -> None:
     # Register routers in dispatcher
     dp.include_router(crypto_handler.router)
     dp.include_router(basic_handlers.router)

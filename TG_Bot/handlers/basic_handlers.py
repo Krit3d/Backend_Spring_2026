@@ -8,16 +8,16 @@ router = Router()
 
 # Register the user and print hello
 @router.message(Command("start"))
-async def cmd_start(message: types.Message):
+async def cmd_start(message: types.Message) -> None:
     await message.answer(
         f"Hello, {message.from_user.full_name}. I'm at your service. What can I do for you?"
     )
     db.insert_user(message.from_user.id, message.from_user.full_name)
 
 
-# Test handler(just to have it)
+# Test handler(just to have it :))
 @router.message(Command("help"))
-async def cmd_help(message: types.Message):
+async def cmd_help(message: types.Message) -> None:
     await message.answer(
         "I am a simple bot-helper. Please, enter your message."
     )
@@ -25,7 +25,7 @@ async def cmd_help(message: types.Message):
 
 # Display list of users
 @router.message(Command("admin"))
-async def cmd_admin(message: types.Message):
+async def cmd_admin(message: types.Message) -> None:
     users = db.get_all_users()
 
     if users:
@@ -39,7 +39,7 @@ async def cmd_admin(message: types.Message):
 
 # Display user statistics
 @router.message(Command("stats"))
-async def cmd_stats(message: types.Message):
+async def cmd_stats(message: types.Message) -> None:
     # Check on admin rights
     if message.from_user.id != ADMIN_ID:
         await message.answer("Access denied")
@@ -60,7 +60,7 @@ async def cmd_stats(message: types.Message):
 
 # Ban and unban logic
 @router.message(Command("ban"))
-async def cmd_ban(message: types.Message, command: CommandObject):
+async def cmd_ban(message: types.Message, command: CommandObject) -> None:
     if message.from_user.id != ADMIN_ID:
         await message.answer("Access denied")
         return
@@ -81,7 +81,7 @@ async def cmd_ban(message: types.Message, command: CommandObject):
 
 
 @router.message(Command("unban"))
-async def cmd_unban(message: types.Message, command: CommandObject):
+async def cmd_unban(message: types.Message, command: CommandObject) -> None:
     if message.from_user.id != ADMIN_ID:
         await message.answer("Access denied")
         return
@@ -102,13 +102,13 @@ async def cmd_unban(message: types.Message, command: CommandObject):
 
 # Photo handler
 @router.message(F.photo)
-async def photo_handler(message: types.Message):
+async def photo_handler(message: types.Message) -> None:
     await message.answer("It's a photo, isn't it? Please, send me a text.")
 
 
 # Handler to other messages(echo-logic)
 @router.message(F.text)
-async def echo_handler(message: types.Message):
+async def echo_handler(message: types.Message) -> None:
     if message.text == "secret":
         await message.answer(f"Congratulations! You've found a secret word!")
     else:

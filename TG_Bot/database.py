@@ -3,7 +3,7 @@ import sqlite3
 
 # Main class containing all methods with SQL-queries
 class Database:
-    def __init__(self, db_file):
+    def __init__(self, db_file: str) -> None:
         # Store filename in object
         self.db_file = db_file
 
@@ -36,7 +36,7 @@ class Database:
             )
 
     # Enter user data on /start command
-    def insert_user(self, user_id, full_name):
+    def insert_user(self, user_id: int, full_name: str):
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
 
@@ -49,7 +49,7 @@ class Database:
                 print(f"DB Error: {type(e).__name__}.")
 
     # Simple check to see if the user is blocked
-    def is_user_banned(self, user_id):
+    def is_user_banned(self, user_id: int) -> bool:
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
             cur.execute(
@@ -62,14 +62,14 @@ class Database:
             return user_data and user_data[0]
 
     # Two methods to change user status
-    def ban_user(self, user_id):
+    def ban_user(self, user_id: int) -> None:
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
             cur.execute(
                 "UPDATE users SET is_banned = 1 WHERE user_id = ?", (user_id,)
             )
 
-    def unban_user(self, user_id):
+    def unban_user(self, user_id: int) -> None:
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
             cur.execute(
@@ -77,7 +77,7 @@ class Database:
             )
 
     # Getting list of users by /admin command
-    def get_all_users(self):
+    def get_all_users(self) -> list[tuple[int, str]]:
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
             cur.execute("SELECT user_id, full_name FROM users")
@@ -87,7 +87,7 @@ class Database:
         return users
 
     # Just a logging of user's requests
-    def write_into_log(self, user_id, coin):
+    def write_into_log(self, user_id: int, coin: str) -> None:
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
 
@@ -100,7 +100,7 @@ class Database:
                 print(f"DB Error: {type(e).__name__}.")
 
     # Return list of grouped by user name crypto requests(/stats command)
-    def get_statistics(self):
+    def get_statistics(self) -> list[str, str, int]:
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
 

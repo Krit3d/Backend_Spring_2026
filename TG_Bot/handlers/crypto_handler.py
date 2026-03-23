@@ -11,7 +11,9 @@ router = Router()
 
 # Handler for /crypto command
 @router.message(Command("crypto"))
-async def cmd_crypto(message: types.Message, coins: list, currencies: list):
+async def cmd_crypto(
+    message: types.Message, coins: list, currencies: list
+) -> None:
     if db.is_user_banned(message.from_user.id):
         await message.answer("Access restricted.")
         return
