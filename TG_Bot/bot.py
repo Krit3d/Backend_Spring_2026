@@ -16,17 +16,29 @@ RESPONSE_DATA = {"coins": None, "currencies": None}
 
 
 # Fetching two lists of coins to work with
-async def fetch_data() -> None:
+async def try_fetch_data() -> bool:
     async with aiohttp.ClientSession() as session:
-        async with session.get(
-            "https://api.coingecko.com/api/v3/coins/list"
-        ) as response:
-            RESPONSE_DATA["coins"] = await response.json()
+        try:
+            async with session.get(
+                "https://api.coingecko.com/api/v3/coins/list"
+            ) as response:
+                RESPONSE_DATA["coins"] = await response.json()
 
-        async with session.get(
-            "https://api.coingecko.com/api/v3/simple/supported_vs_currencies"
-        ) as response:
-            RESPONSE_DATA["currencies"] = await response.json()
+            async with session.get(
+                "https://api.coingecko.com/api/v3/simple/supported_vs_currencies"
+            ) as response:
+                RESPONSE_DATA["currencies"] = await response.json()
+
+        except aiohttp.ClientError as e:
+            logging.error(f"Connection error: {type(e).__name__}.")
+            return False
+
+        except Exception as e:
+            logging.error(f"Unexpected error: {type(e).__name__}.")
+            return False
+
+        else:
+            return True
 
 
 async def main() -> None:
@@ -35,7 +47,10 @@ async def main() -> None:
     dp.include_router(basic_handlers.router)
 
     # Make requests and collect them(two lists)
-    await fetch_data()
+    is_fetched = await try_fetch_data()
+    if not is_fetched:
+        logging.warning("Bot was launched without data!")
+
     # Delete hooks and skip incoming messages
     await bot.delete_webhook(drop_pending_updates=True)
     # Start polling process for new updates
