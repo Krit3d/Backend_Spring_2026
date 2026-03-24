@@ -33,6 +33,8 @@ async def cmd_crypto(
             async with session.get(url) as response:
                 response.raise_for_status()
 
+                data = await response.json()
+
     # If raise_for_status() worked:
     except aiohttp.ClientResponseError as http_err:
         if http_err.status == 429:
@@ -45,7 +47,6 @@ async def cmd_crypto(
         await message.answer(f"Connection error: {type(con_err).__name__}.")
 
     else:
-        data = response.json()
         raw_price = data.get(coin["id"], {}).get(currency, None)
 
         # Formatting the price to avoid scientific notation
