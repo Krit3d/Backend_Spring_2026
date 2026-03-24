@@ -12,7 +12,10 @@ router = Router()
 # Handler for /crypto command
 @router.message(Command("crypto"))
 async def cmd_crypto(
-    message: types.Message, coins: list, currencies: list
+    message: types.Message,
+    session: aiohttp.ClientSession,
+    coins: list,
+    currencies: list,
 ) -> None:
     if db.is_user_banned(message.from_user.id):
         await message.answer("Access restricted.")
@@ -29,11 +32,10 @@ async def cmd_crypto(
     url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin['id']}&vs_currencies={currency}"
 
     try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                response.raise_for_status()
+        async with session.get(url) as response:
+            response.raise_for_status()
 
-                data = await response.json()
+            data = await response.json()
 
     # If raise_for_status() worked:
     except aiohttp.ClientResponseError as http_err:
