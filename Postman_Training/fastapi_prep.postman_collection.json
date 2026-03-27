@@ -1,0 +1,61 @@
+{
+  "info": {
+    "_postman_id": "d44e788c-94d2-41a9-89d3-8ea5507cbdf3",
+    "name": "FastAPI_Prep",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53508579"
+  },
+  "item": [
+    {
+      "name": "CoinGecko Ping",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.coingecko.com/api/v3/ping",
+          "protocol": "https",
+          "host": [
+            "api",
+            "coingecko",
+            "com"
+          ],
+          "path": [
+            "api",
+            "v3",
+            "ping"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Fake Post",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"My first POST\",\r\n    \"body\": \"I am ready for FastAPI\",\r\n    \"userUD\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
