@@ -32,11 +32,11 @@ async def root() -> JSONResponse:
 
 @app.post("/api/users")
 async def create_user(user: UserCreate) -> JSONResponse:
-    add_user(user.username, user.age, user.email)
+    user_id = add_user(user.username, user.age, user.email)
 
     return JSONResponse(
         content={
-            "message": f"User {user.username} with id={get_user_id(user.email)[0]} successfully created!",
+            "message": f"User {user.username} with id={user_id} successfully created!",
             "user": user.model_dump(),
         }
     )

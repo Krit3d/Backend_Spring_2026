@@ -18,7 +18,7 @@ def create_table() -> None:
         )
 
 
-def add_user(username: str, age: int, email: EmailStr) -> None:
+def add_user(username: str, age: int, email: EmailStr) -> int | None:
     with sqlite3.connect("users.db") as con:
         cur = con.cursor()
 
@@ -31,16 +31,10 @@ def add_user(username: str, age: int, email: EmailStr) -> None:
             )
         except sqlite3.IntegrityError:
             raise HTTPException(status_code=409, detail="User already exists!")
+        else:
+            con.commit()
 
-        con.commit()
-
-
-def get_user_id(email: EmailStr) -> tuple[int]:
-    with sqlite3.connect("users.db") as con:
-        cur = con.cursor()
-        cur.execute("SELECT id FROM users WHERE email = ?", (email,))
-
-        return cur.fetchone()
+            return cur.lastrowid
 
 
 def get_all_users() -> list[dict]:
