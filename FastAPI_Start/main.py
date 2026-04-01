@@ -1,11 +1,10 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr
 from database import (
     create_table,
     add_user,
-    get_email_list,
     get_user_id,
     get_all_users,
 )
@@ -33,10 +32,6 @@ async def root() -> JSONResponse:
 
 @app.post("/api/users")
 async def create_user(user: UserCreate) -> JSONResponse:
-    emails = [tup[0] for tup in get_email_list()]
-    if user.email in emails:
-        raise HTTPException(status_code=409, detail="User already exists!")
-
     add_user(user.username, user.age, user.email)
 
     return JSONResponse(

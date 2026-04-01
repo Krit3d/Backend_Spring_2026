@@ -1,4 +1,5 @@
 from pydantic import EmailStr
+from fastapi import HTTPException
 import sqlite3
 
 
@@ -20,21 +21,18 @@ def create_table() -> None:
 def add_user(username: str, age: int, email: EmailStr) -> None:
     with sqlite3.connect("users.db") as con:
         cur = con.cursor()
-        cur.execute(
-            """
-            INSERT INTO users (username, age, email) VALUES (?, ?, ?)
-            """,
-            (username, age, email),
-        )
+
+        try:
+            cur.execute(
+                """
+                INSERT INTO users (username, age, email) VALUES (?, ?, ?)
+                """,
+                (username, age, email),
+            )
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=409, detail="User already exists!")
+
         con.commit()
-
-
-def get_email_list() -> tuple[str]:
-    with sqlite3.connect("users.db") as con:
-        cur = con.cursor()
-        cur.execute("SELECT email FROM users")
-
-        return cur.fetchall()
 
 
 def get_user_id(email: EmailStr) -> tuple[int]:
