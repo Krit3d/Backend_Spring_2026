@@ -26,19 +26,17 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 async def root() -> JSONResponse:
-    return JSONResponse(content={"status": "Ed is in prod"})
+    return {"status": "Ed is in prod"}
 
 
 @app.post("/api/users")
 async def create_user(user: UserCreate) -> JSONResponse:
     user_id = await add_user(user.username, user.age, user.email)
 
-    return JSONResponse(
-        content={
-            "message": f"User {user.username} with id={user_id} successfully created!",
-            "user": user.model_dump(),
-        }
-    )
+    return {
+        "message": f"User {user.username} with id={user_id} successfully created!",
+        "user": user.model_dump(),
+    }
 
 
 @app.get("/api/users")
