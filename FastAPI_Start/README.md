@@ -78,7 +78,7 @@ pip install -r requirements.txt
 ```
 
 **3. Configure `.env`:**
-Set `DB_HOST=localhost` in your `.env` file to point to your local PostgreSQL instance.
+Set `POSTGRES_HOST=localhost` in your `.env` file to point to your local PostgreSQL instance.
 
 **4. Start the server:**
 ```bash
