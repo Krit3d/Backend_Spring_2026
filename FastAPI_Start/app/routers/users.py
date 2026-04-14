@@ -8,10 +8,7 @@ router = APIRouter()
 
 @router.get("/api/users")
 async def get_users_data() -> list[User]:
-    raw_users = await get_all_users()
-
-    # We can pass dict to a 'User' by turning on `from_attributes` property
-    return [User(**u) for u in raw_users]
+    return await get_all_users()
 
 
 # POST endpoint for user registration
@@ -29,9 +26,9 @@ async def create_user(user: UserCreate) -> User:
 
 @router.get("/api/users/{user_id}")
 async def get_user_data(user_id: int) -> User:
-    raw_user = await get_user(user_id)
+    data = await get_user(user_id)
 
-    if raw_user is None:
+    if data is None:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return User(**raw_user)
+    return data

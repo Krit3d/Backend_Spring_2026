@@ -13,10 +13,5 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(100), nullable=False)
     age: Mapped[int] = mapped_column(Integer, nullable=False)
     email: Mapped[str] = mapped_column(
-        String(255), unique=True, nullable=False, index=True
+        String(254), unique=True, nullable=False, index=True
     )
-
-    # id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    # username TEXT NOT NULL,
-    # age INTEGER NOT NULL,
-    # email TEXT UNIQUE NOT NULL
