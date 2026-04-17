@@ -1,23 +1,16 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from .config import settings
-from .database import create_table, set_db_pool
+from .database import engine
 from .routers import users
-
-import asyncpg
 
 
 # Application lifecycle control
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    db_pool = await asyncpg.create_pool(dsn=settings.get_db_url())
-    set_db_pool(db_pool)
-
-    await create_table()
     yield
 
-    await db_pool.close()
+    await engine.dispose()
 
 
 # Passing lifespan when creating the app
