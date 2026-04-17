@@ -22,14 +22,14 @@ async def create_user(user: UserCreate) -> User:
     async with AsyncSessionLocal() as session:
         rep = UserRepository(session)
 
-        # try:
-        user_id = await rep.add_user(user.username, user.age, user.email)
-        # except ValueError:
-        #     # Get a specific 409 status code instead of internal 500 error
-        #     raise HTTPException(status_code=409, detail="User already exists!")
-        # else:
-        #     # model_dump is for creation of model instances from obj with attrs
-        return User(id=user_id, **user.model_dump())
+        try:
+            user_id = await rep.add_user(user.username, user.age, user.email)
+        except ValueError:
+            # Get a specific 409 status code instead of internal 500 error
+            raise HTTPException(status_code=409, detail="User already exists!")
+        else:
+            # model_dump is for creation of model instances from obj with attrs
+            return User(id=user_id, **user.model_dump())
 
 
 @router.get("/api/users/{user_id}")
